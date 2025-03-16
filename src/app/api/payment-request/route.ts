@@ -26,6 +26,7 @@ export async function POST(req: Request) {
                 out: false,
                 amount: amount, // Convert to millisatoshis
                 memo: memo || "Payment Request",
+                unit: "USD",
             }),
         });
 
