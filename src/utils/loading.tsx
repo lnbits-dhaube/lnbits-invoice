@@ -7,7 +7,7 @@ const Loading = () => {
                 className="flex items-center space-x-2"
             >
                 <svg
-                    className="h-20 w-20 animate-spin stroke-current text-green-500"
+                    className="h-20 w-20 animate-spin stroke-current text-green-600"
                     viewBox="0 0 256 256"
                 >
                     <line
@@ -83,7 +83,7 @@ const Loading = () => {
                         strokeWidth="24"
                     ></line>
                 </svg>
-                <span className="text-4xl font-medium text-green-500">Loading...</span>
+                <span className="text-4xl font-medium text-green-600">Loading...</span>
             </div>
         </div>
     );

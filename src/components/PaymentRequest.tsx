@@ -59,9 +59,9 @@ export default function PaymentRequest() {
                         <span className="text-black"> Request</span>
                     </CardTitle>
                     <hr className="w-full p-0 border-1" />
-                    <h2 className="text-center text-2xl font-bold text-green-700">
+                    {/* <h2 className="text-center text-2xl font-bold text-green-700">
                         WELCOME
-                    </h2>
+                    </h2> */}
                 </CardHeader>
                 <CardContent className="p-6 pt-0">
                     {processing ? (
@@ -71,58 +71,58 @@ export default function PaymentRequest() {
                     ) : !invoice ? (
                         <div className="space-y-6">
                             <div className="relative">
-                                <FaUser className="absolute left-3 top-5 text-gray-500" />
+                                <FaUser className="absolute left-3 top-2 text-gray-500 h-10" />
                                 <Input
                                     type="text"
                                     placeholder="Enter Your Name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="pl-10 h-14"
+                                    className="pl-10 h-14 text-lg md:text-lg"
                                 />
                             </div>
                             <div className="relative">
-                                <FaDollarSign className="absolute left-3 top-5 text-gray-500 " />
+                                <FaDollarSign className="absolute left-3 top-2 text-gray-500 h-10" />
                                 <Input
                                     type="number"
                                     placeholder="Amount"
                                     prefix="$"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : "")}
-                                    className="pl-10 h-14"
+                                    className="pl-10 h-14 text-lg md:text-lg"
                                 />
                                 <div
                                     className="relative flex flex-row gap-4 my-4 items-center justify-center">
                                     <button
-                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 10 ? "bg-green-400 text-white" : ""}`}
+                                        className={`flex-col text-gray-500  border shadow-xs rounded-md w-12 h-10 ${amount === 10 ? "bg-green-600 text-white" : ""}`}
                                         onClick={() => setAmount(10)}>
                                         <span>$10</span>
                                     </button>
                                     <button
-                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 20 ? "bg-green-400 text-white" : ""}`}
+                                        className={`flex-col text-gray-500 border shadow-xs rounded-md w-12 h-10 ${amount === 20 ? "bg-green-600 text-white" : ""}`}
                                         onClick={() => setAmount(20)}>
                                         <span>$20</span>
                                     </button>
                                     <button
-                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 40 ? "bg-green-400 text-white" : ""}`}
+                                        className={`flex-col text-gray-500 border shadow-xs rounded-md w-12 h-10 ${amount === 40 ? "bg-green-600 text-white" : ""}`}
                                         onClick={() => setAmount(40)}>
                                         <span>$40</span>
                                     </button>
                                     <button
-                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 50 ? "bg-green-400 text-white" : ""}`}
+                                        className={`flex-col text-gray-500 border shadow-xs rounded-md w-12 h-10 ${amount === 50 ? "bg-green-600 text-white" : ""}`}
                                         onClick={() => setAmount(50)}>
                                         <span>$50</span>
                                     </button>
                                     <button
-                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 100 ? "bg-green-400 text-white" : ""}`}
+                                        className={`flex-col text-gray-500 border shadow-xs rounded-md w-12 h-10 ${amount === 100 ? "bg-green-600 text-white" : ""}`}
                                         onClick={() => setAmount(100)}>
                                         <span>$100</span>
                                     </button>
                                 </div>
                             </div>
                             <div className="relative">
-                                <FaStickyNote className="absolute left-3 top-3 text-gray-500" />
+                                <FaStickyNote className="absolute left-3 top-1 text-gray-500 h-10" />
                                 <textarea
-                                    className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 text-lg md:text-lg"
                                     placeholder="Remarks"
                                     value={memo}
                                     rows={4}
