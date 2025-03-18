@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Label } from "@/components/ui/label";
+// import { Checkbox } from "@/components/ui/checkbox";
 import { FaUser, FaStickyNote, FaDollarSign } from "react-icons/fa";
 
 export default function PaymentRequest() {
@@ -12,13 +12,13 @@ export default function PaymentRequest() {
     const [amount, setAmount] = useState<number | "">("");
     const [memo, setMemo] = useState<string>("");
     const [invoice, setInvoice] = useState<string | null>(null);
-    const [agreed, setAgreed] = useState<boolean>(false);
+    // const [agreed, setAgreed] = useState<boolean>(false);
 
     const sendPaymentRequest = async () => {
-        if (!agreed) {
-            alert("You must agree to the Terms & Conditions.");
-            return;
-        }
+        // if (!agreed) {
+        //     alert("You must agree to the Terms & Conditions.");
+        //     return;
+        // }
         if (!amount || Number(amount) <= 0) {
             alert("Please enter a valid amount.");
             return;
@@ -45,21 +45,24 @@ export default function PaymentRequest() {
 
     return (
         <div className="flex flex-col items-center w-full justify-center min-h-screen overflow-y-clip px-6 py-20 my-auto">
-            <Card className="relative flex-grow justify-center w-full max-w-md bg-white shadow-lg rounded-sm pt-10 my-auto">
-                <CardHeader className="absolute top-0 w-full text-center my-4">
-                    <CardTitle className="text-xl font-semibold">
+            <Card className="relative flex-grow justify-center w-full max-w-md bg-white shadow-lg rounded-sm  my-auto">
+                <CardHeader className=" w-full text-center mb-4">
+                    <CardTitle className="text-xl font-semibold ">
                         <span className="text-black">Make </span>
                         <span className="text-green-600 font-bold">Payment</span>
                         <span className="text-black"> Request</span>
                     </CardTitle>
                     <hr className="w-full p-0 border-1" />
-                    <h2 className="text-center text-2xl font-bold text-green-700 mt-6">
-                        WELCOME
-                    </h2>
+                    <div>
+
+                        <h2 className="text-center text-2xl font-bold text-green-700">
+                            WELCOME
+                        </h2>
+                    </div>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-6 pt-0">
                     {!invoice ? (
-                        <div className="space-y-6">
+                        <div className="mt-2 space-y-6">
                             <div className="relative">
                                 <FaUser className="absolute left-3 top-3 text-gray-500" />
                                 <Input
