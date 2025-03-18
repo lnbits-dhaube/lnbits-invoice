@@ -1,28 +1,32 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FaUser, FaStickyNote, FaDollarSign } from "react-icons/fa";
+// import { Label } from "@/components/ui/label";
+// import { Checkbox } from "@/components/ui/checkbox";
+import { FaUser, FaStickyNote, FaDollarSign, } from "react-icons/fa";
+
+import Loading from "@/utils/loading";
 
 export default function PaymentRequest() {
     const [name, setName] = useState<string>("");
     const [amount, setAmount] = useState<number | "">("");
     const [memo, setMemo] = useState<string>("");
     const [invoice, setInvoice] = useState<string | null>(null);
-    const [agreed, setAgreed] = useState<boolean>(false);
+    const [processing, setProcessing] = useState<boolean>(false);
+    // const [agreed, setAgreed] = useState<boolean>(false);
 
     const sendPaymentRequest = async () => {
-        if (!agreed) {
-            alert("You must agree to the Terms & Conditions.");
-            return;
-        }
+        // if (!agreed) {
+        //     alert("You must agree to the Terms & Conditions.");
+        //     return;
+        // }
         if (!amount || Number(amount) <= 0) {
             alert("Please enter a valid amount.");
             return;
         }
+        setProcessing(true);
 
         try {
             const response = await fetch("/api/payment-request", {
@@ -40,46 +44,80 @@ export default function PaymentRequest() {
         } catch (error) {
             console.error("Error requesting payment:", error);
             alert("Error requesting payment");
+        } finally {
+            setProcessing(false);
         }
     };
 
     return (
         <div className="flex flex-col items-center w-full justify-center min-h-screen overflow-y-clip px-6 py-20 my-auto">
             <Card className="relative flex-grow justify-center w-full max-w-md bg-white shadow-lg rounded-sm pt-10 my-auto">
-                <CardHeader className="absolute top-0 w-full text-center my-4">
+                <CardHeader className=" w-full text-center my-4">
                     <CardTitle className="text-xl font-semibold">
                         <span className="text-black">Make </span>
                         <span className="text-green-600 font-bold">Payment</span>
                         <span className="text-black"> Request</span>
                     </CardTitle>
                     <hr className="w-full p-0 border-1" />
-                    <h2 className="text-center text-2xl font-bold text-green-700 mt-6">
+                    <h2 className="text-center text-2xl font-bold text-green-700">
                         WELCOME
                     </h2>
                 </CardHeader>
-                <CardContent className="p-6">
-                    {!invoice ? (
+                <CardContent className="p-6 pt-0">
+                    {processing ? (
+                        <div className="flex justify-center py-10">
+                            <Loading />
+                        </div>
+                    ) : !invoice ? (
                         <div className="space-y-6">
                             <div className="relative">
-                                <FaUser className="absolute left-3 top-3 text-gray-500" />
+                                <FaUser className="absolute left-3 top-5 text-gray-500" />
                                 <Input
                                     type="text"
                                     placeholder="Enter Your Name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="pl-10"
+                                    className="pl-10 h-14"
                                 />
                             </div>
                             <div className="relative">
-                                <FaDollarSign className="absolute left-3 top-3 text-gray-500" />
+                                <FaDollarSign className="absolute left-3 top-5 text-gray-500 " />
                                 <Input
                                     type="number"
                                     placeholder="Amount"
                                     prefix="$"
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : "")}
-                                    className="pl-10"
+                                    className="pl-10 h-14"
                                 />
+                                <div
+                                    className="relative flex flex-row gap-4 my-4 items-center justify-center">
+                                    <button
+                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 10 ? "bg-green-400 text-white" : ""}`}
+                                        onClick={() => setAmount(10)}>
+                                        <span>$10</span>
+                                    </button>
+                                    <button
+                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 20 ? "bg-green-400 text-white" : ""}`}
+                                        onClick={() => setAmount(20)}>
+                                        <span>$20</span>
+                                    </button>
+                                    <button
+                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 40 ? "bg-green-400 text-white" : ""}`}
+                                        onClick={() => setAmount(40)}>
+                                        <span>$40</span>
+                                    </button>
+                                    <button
+                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 50 ? "bg-green-400 text-white" : ""}`}
+                                        onClick={() => setAmount(50)}>
+                                        <span>$50</span>
+                                    </button>
+                                    <button
+                                        className={`flex-col text-gray-500 border-black border-1 rounded-md w-12 h-10 ${amount === 100 ? "bg-green-400 text-white" : ""}`}
+                                        onClick={() => setAmount(100)}>
+                                        <span>$100</span>
+                                    </button>
+                                </div>
                             </div>
                             <div className="relative">
                                 <FaStickyNote className="absolute left-3 top-3 text-gray-500" />
@@ -87,7 +125,7 @@ export default function PaymentRequest() {
                                     className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     placeholder="Remarks"
                                     value={memo}
-                                    rows={3}
+                                    rows={4}
                                     onChange={(e) => setMemo(e.target.value)}
 
                                 />
@@ -104,7 +142,8 @@ export default function PaymentRequest() {
                                 </Label>
                             </div> */}
                             <Button
-                                className="w-full bg-green-600 hover:bg-green-700 font-bold text-lg py-4 mt-6"
+                                className="w-full flex-row bg-green-600 hover:bg-green-700 font-bold text-xl mt-6 h-14"
+                                size="lg"
                                 onClick={sendPaymentRequest}
                             >
                                 Generate Invoice
@@ -114,7 +153,7 @@ export default function PaymentRequest() {
                         <div className="text-center text-green-700 text-xl font-semibold mb-4">
                             Invoice Generated Successfully !!
                             <Button
-                                className="w-full bg-green-600 mt-4 text-xl font-bold text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600"
+                                className="w-full bg-green-600 mt-4 text-xl font-bold text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 h-14"
                                 onClick={() => {
                                     setInvoice(null);
                                     setName("");
@@ -127,7 +166,7 @@ export default function PaymentRequest() {
                             </Button>
 
                             <Button
-                                className="w-full mt-4 text-xl text-red-500 hover:text-red-700 bg-white border-none"
+                                className="w-full mt-4 text-xl text-red-500 hover:text-red-700 bg-white border-none shadow-none"
                                 onClick={() => {
                                     setInvoice(null);
                                 }}
