@@ -3,14 +3,13 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
     try {
         const apiKey = process.env.LNBITS_API_KEY;
-
-        console.log("API Key:", apiKey);
-
         if (!apiKey) {
             return NextResponse.json({ error: "API Key is missing" }, { status: 500 });
         }
 
-        const { amount, memo } = await req.json();
+        const { amount, memo, unhashed_description } = await req.json();
+        console.log("Payment request:", { amount, memo, unhashed_description });
+        const description = Buffer.from(unhashed_description, 'utf-8').toString('hex');
 
         if (!amount || amount <= 0) {
             return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
@@ -26,6 +25,7 @@ export async function POST(req: Request) {
                 out: false,
                 amount: amount, // Convert to millisatoshis
                 memo: memo || "Payment Request",
+                unhashed_description: description || "",
                 unit: "USD",
             }),
         });
