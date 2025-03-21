@@ -7,7 +7,7 @@ export default function Transactions() {
     const [transactions, setTransactions] = useState<TransactionResponse[]>([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    let [numPages, setNumPages] = useState(0);
+    const [numPages, setNumPages] = useState(0);
     const limit = 10; // Number of transactions per page
     const [activeTransaction, setActiveTransaction] = useState<TransactionResponse[]>([]);
 

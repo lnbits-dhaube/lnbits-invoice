@@ -23,9 +23,9 @@ export async function POST(req: Request) {
             },
             body: JSON.stringify({
                 out: false,
-                amount: amount, // Convert to millisatoshis
+                amount: amount, 
                 memo: memo || "Payment Request",
-                unhashed_description: description || "",
+                unhashed_description: description || "Payment Description",
                 unit: "USD",
             }),
         });
