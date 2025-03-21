@@ -23,9 +23,9 @@ export async function POST(req: Request) {
             },
             body: JSON.stringify({
                 out: false,
-                amount: amount, 
+                amount: amount,
                 memo: memo || "Payment Request",
-                unhashed_description: description || "Payment Description",
+                unhashed_description: description || Buffer.from("Payment Description", "utf-8").toString('hex'),
                 unit: "USD",
             }),
         });
