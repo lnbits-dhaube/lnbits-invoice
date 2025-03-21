@@ -8,8 +8,8 @@ export async function POST(req: Request) {
         }
 
         const { amount, memo, unhashed_description } = await req.json();
-        console.log("Payment request:", { amount, memo, unhashed_description });
         const description = Buffer.from(unhashed_description, 'utf-8').toString('hex');
+        console.log("Payment request:", { amount, memo, description });
 
         if (!amount || amount <= 0) {
             return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
@@ -25,8 +25,7 @@ export async function POST(req: Request) {
                 "out": false,
                 "amount": amount,
                 "memo": memo,
-                "unit": "USD",
-                "unhashed_description": description,
+                "unit": "USD"
             }),
         });
 
