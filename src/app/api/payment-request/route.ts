@@ -19,14 +19,14 @@ export async function POST(req: Request) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-Api-Key": apiKey, // Use environment variable
+                "x-api-key": apiKey, // Use environment variable
             },
             body: JSON.stringify({
-                out: false,
-                amount: amount,
-                memo: memo || "Payment Request",
-                unhashed_description: description || Buffer.from("Payment Description", "utf-8").toString('hex'),
-                unit: "USD",
+                "out": false,
+                "amount": amount,
+                "memo": memo,
+                "unit": "USD",
+                "unhashed_description": description,
             }),
         });
 
