@@ -15,7 +15,7 @@ export interface Transaction {
     amount?: string;
     fee?: string;
     memo?: string;
-    time?: number;
+    time: number;
     bolt11?: string;
     preimage?: string;
     payment_hash?: string;

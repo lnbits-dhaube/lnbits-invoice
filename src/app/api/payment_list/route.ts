@@ -1,3 +1,4 @@
+import { Transaction } from "@/interfaces/transactions";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -34,8 +35,8 @@ export async function GET(req: Request) {
             console.error("Error fetching payments:", data.detail);
             return NextResponse.json({ error: data.detail || "Failed to fetch payments" }, { status: response.status });
         }
-        const formattedTransactions = data.filter((tx: any) => tx.status === "success")
-            .map((tx: any) => {
+        const formattedTransactions = data.filter((tx: Transaction) => tx.status === "success")
+            .map((tx: Transaction) => {
                 const amountValue = tx.extra?.fiat_amount ?? tx.extra?.wallet_fiat_amount ?? 0; // Ensure fallback value
                 return {
                     memo: tx.memo || "No Description",
