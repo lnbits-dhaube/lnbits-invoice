@@ -22,10 +22,10 @@ export default function PaymentRequest() {
         //     alert("You must agree to the Terms & Conditions.");
         //     return;
         // }
-        // if (!name.trim()) {
-        //     alert("Name is required!");
-        //     return;
-        // }
+        if (!name.trim()) {
+            alert("Name is required!");
+            return;
+        }
 
         if (!amount || Number(amount) <= 0) {
             alert("Please enter a valid amount.");
