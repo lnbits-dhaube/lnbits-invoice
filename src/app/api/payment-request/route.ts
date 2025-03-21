@@ -19,7 +19,7 @@ export async function POST(req: Request) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-Api-Key": process.env.LNBITS_API_KEY || "", // Use environment variable
+                "X-Api-Key": apiKey, // Use environment variable
             },
             body: JSON.stringify({
                 out: false,

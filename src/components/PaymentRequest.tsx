@@ -22,6 +22,11 @@ export default function PaymentRequest() {
         //     alert("You must agree to the Terms & Conditions.");
         //     return;
         // }
+        if (!name.trim()) {
+            alert("Name is required!");
+            return;
+        }
+
         if (!amount || Number(amount) <= 0) {
             alert("Please enter a valid amount.");
             return;
@@ -76,6 +81,7 @@ export default function PaymentRequest() {
                                     type="text"
                                     placeholder="Enter Your Name"
                                     value={name}
+                                    required
                                     onChange={(e) => setName(e.target.value)}
                                     className="pl-10 h-14 text-lg md:text-lg"
                                 />

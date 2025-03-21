@@ -10,12 +10,13 @@ export default function Dashboard() {
             <Sidebar />
 
             {/* Main Content */}
-            <div className="flex flex-col flex-1 p-6 pt-2.5 bg-gray-100">
+            <div className="flex flex-col p-6 pt-2.5 bg-gray-100 w-full">
                 {/* Header */}
                 <Header />
 
+                {/* <div className="h-10" /> */}
                 {/* Wallet Section */}
-                <div className="mt-6">
+                <div className="mt-6 ">
                     <WalletCard />
                 </div>
 

@@ -24,7 +24,7 @@ export default function Sidebar() {
             <div className={`${isOpen ? "block" : "hidden"} md:flex flex-col bg-gradient-to-b from-green-600 to-green-400 min-h-screen text-white md:w-1/3 lg:w-1/4`}>
 
                 <div className={`fixed md:relative top-0 left-0 h-full md:w-full w-full bg-gradient-to-b from-green-600 to-green-400 p-6 text-white`}>
-                    <div className="flex items-center justify-center gap-2 text-lg font-semibold mb-6 mx-12 text-center border border-black shadow-sm shadow-black bg-white text-black rounded py-1 px-4">
+                    <div className="flex items-center justify-center gap-2 text-lg font-semibold mb-6 mx-12 text-center border border-black shadow-sm  bg-white text-black rounded py-1 px-4">
                         <CiGrid42 size={24} />
                         <span>Dashboard</span>
                     </div>
