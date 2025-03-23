@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const apiKey = process.env.LNBITS_API_KEY;
         if (!apiKey) {
@@ -27,7 +27,7 @@ export async function GET(req: Request) {
         const btcPrice = btcPriceData.USD.last; 
         const balance_usd = balance_btc * btcPrice;
         console.log("Wallet balance in USD:", balance_usd);
-        return NextResponse.json({ balance: balance_usd });
+        return NextResponse.json({ balance: balance_usd.toFixed(3) });
     } catch (error) {
         console.error("Wallet error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
