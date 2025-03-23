@@ -5,7 +5,7 @@ import Loading from "@/utils/loading";
 
 export default function Transactions() {
     const [transactions, setTransactions] = useState<TransactionResponse[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [numPages, setNumPages] = useState(0);
     const limit = 10; // Number of transactions per page
@@ -31,13 +31,11 @@ export default function Transactions() {
 
     useEffect(() => {
         const fetchPages = async () => {
-            setLoading(true);
             try {
                 setActiveTransaction(transactions.slice((page - 1) * limit, page * limit));
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             }
-            setLoading(false);
         };
         fetchPages();
     }, [page]);
