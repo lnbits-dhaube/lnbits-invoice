@@ -14,20 +14,19 @@ export async function GET() {
             },
         });
         const data = await response.json();
-        if (!response.ok) {
+        if (!response.ok){
             console.error("Wallet error:", data.detail);
             return NextResponse.json({ error: data.detail || "Failed to fetch wallet" }, { status: response.status });
         }
-        const balance_msats = data.balance; 
+        const balance_msats = data.balance;
         const balance_sats = balance_msats / 1000;
         const balance_btc = balance_sats / 100_000_000;
         const btcPriceRes = await fetch("https://blockchain.info/ticker");
         const btcPriceData = await btcPriceRes.json();
-
-        const btcPrice = btcPriceData.USD.last; 
+        const btcPrice = btcPriceData.USD.last;
         const balance_usd = balance_btc * btcPrice;
         console.log("Wallet balance in USD:", balance_usd);
-        return NextResponse.json({ balance: balance_usd.toFixed(3) });
+        return NextResponse.json({ balance: balance_usd.toFixed(3)});
     } catch (error) {
         console.error("Wallet error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
