@@ -30,7 +30,7 @@ export default function Transactions() {
             setLoading(false);
         };
         fetchTransactions();
-    }, []);
+    });
 
     useEffect(() => {
         const fetchPages = async () => {

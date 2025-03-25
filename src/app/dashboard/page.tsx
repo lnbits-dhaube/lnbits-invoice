@@ -1,9 +1,21 @@
+"use client";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import WalletCard from "@/components/WalletCard";
 import Transactions from "@/components/Transactions";
+import Statement from "@/components/Statement";
+import { DashboardProvider, useDashboard } from "@/context/DashboardContext";
 
 export default function Dashboard() {
+    return (
+        <DashboardProvider>
+            <DashboardContent />
+        </DashboardProvider>
+    );
+}
+
+function DashboardContent() {
+    const { activeComponent } = useDashboard();
     return (
         <div className="flex min-h-screen h-full overflow-auto">
             {/* Sidebar */}
@@ -22,7 +34,7 @@ export default function Dashboard() {
 
                 {/* Transactions */}
                 <div className="mt-6">
-                    <Transactions />
+                    {activeComponent === "dashboard" ? <Transactions /> : <Statement />}
                 </div>
             </div>
         </div>
