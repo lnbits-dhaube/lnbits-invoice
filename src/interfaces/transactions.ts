@@ -30,6 +30,6 @@ export interface Transaction {
 export interface TransactionResponse {
     memo: string;
     date: string;
-    amount: string;
+    amount: number;
     color: string;
 }

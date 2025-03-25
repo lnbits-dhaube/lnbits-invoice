@@ -9,7 +9,9 @@ export default function Transactions() {
     const [page, setPage] = useState(1);
     const [numPages, setNumPages] = useState(0);
     const limit = 10; // Number of transactions per page
+    const [filteredTransactions, setFilteredTransactions] = useState<TransactionResponse[]>([]);
     const [activeTransaction, setActiveTransaction] = useState<TransactionResponse[]>([]);
+    const [filter, setFilter] = useState("all");
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -18,6 +20,7 @@ export default function Transactions() {
                 const res = await fetch(`/api/payment_list`);
                 const data = await res.json();
                 setTransactions(data);
+                setFilteredTransactions(data);
                 setActiveTransaction(data.slice(0, limit));
                 setNumPages(Math.ceil(data.length / limit));
                 console.log("Number of pages:", numPages);
@@ -32,14 +35,31 @@ export default function Transactions() {
     useEffect(() => {
         const fetchPages = async () => {
             try {
-                setActiveTransaction(transactions.slice((page - 1) * limit, page * limit));
+                setActiveTransaction(filteredTransactions.slice((page - 1) * limit, page * limit));
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             }
         };
         fetchPages();
-    }, [page]);
+    }, [page, filter]);
 
+    const filteTransactions = (applyFilter: string) => {
+        if (applyFilter === "all") {
+            setFilteredTransactions(transactions);
+            setNumPages(Math.ceil(transactions.length / limit));
+        } else if (applyFilter === "deposit") {
+            const deposit = transactions.filter((tx) => tx.amount > 0);
+            setFilteredTransactions(deposit);
+            setNumPages(Math.ceil(deposit.length / limit));
+        }
+        else {
+            const withdraw = transactions.filter((tx) => tx.amount < 0);
+            setFilteredTransactions(withdraw);
+            setNumPages(Math.ceil(withdraw.length / limit));
+        }
+        setPage(1);
+        setFilter(applyFilter);
+    }
 
     return (
         <div className="bg-white p-4 rounded-lg shadow-lg">
@@ -47,9 +67,21 @@ export default function Transactions() {
 
             {/* Filter Buttons */}
             <div className="flex justify-between items-center mb-4">
-                <button className="bg-gray-100 shadow-sm px-4 py-2 rounded-lg w-24 md:w-30">All</button>
-                <button className="bg-gray-100 shadow-sm px-4 py-2 rounded-lg w-24 md:w-30">Withdraw</button>
-                <button className="bg-gray-100 shadow-sm px-4 py-2 rounded-lg w-24 md:w-30">Deposit</button>
+                <button
+                    className={`bg-gray-100 shadow-sm px-4 py-2 rounded-lg w-24 md:w-30 ${filter === "all" ? "bg-green-200" : ""}`}
+                    onClick={() => filteTransactions("all")}>
+                    All
+                </button>
+                <button
+                    className={`bg-gray-100 shadow-sm px-4 py-2 rounded-lg w-24 md:w-30 ${filter === "withdraw" ? "bg-green-200" : ""}`}
+                    onClick={() => filteTransactions("withdraw")}>
+                    Withdraw
+                </button>
+                <button
+                    className={`bg-gray-100 shadow-sm px-4 py-2 rounded-lg w-24 md:w-30 ${filter === "deposit" ? "bg-green-200" : ""}`}
+                    onClick={() => filteTransactions("deposit")}>
+                    Deposit
+                </button>
             </div>
 
             {/* Transaction List */}
@@ -64,7 +96,7 @@ export default function Transactions() {
                                     <p className="text-sm font-semibold">{tx.memo}</p>
                                     <p className="text-xs text-gray-600">{tx.date}</p>
                                 </div>
-                                <p className={`text-sm font-bold ${tx.color}`}>{tx.amount}</p>
+                                <p className={`text-sm font-bold ${tx.color}`}>${tx.amount}</p>
                             </div>
                         ))
                     ) : (
@@ -82,7 +114,7 @@ export default function Transactions() {
                 >
                     Previous
                 </button>
-                <span className="text-sm font-semibold">Page {page} of {numPages}</span>
+                <span className="text-sm font-semibold">Page {numPages > 0 ? page : 0} of {numPages}</span>
                 <button
                     className="bg-gray-200 px-4 py-2 rounded-lg disabled:opacity-50"
                     onClick={() => setPage((prev) => prev + 1)}

@@ -41,7 +41,7 @@ export async function GET(req: Request) {
                 return {
                     memo: tx.memo || "No Description",
                     date: new Date(tx.time * 1000).toLocaleString(), // Convert UNIX timestamp to readable date
-                    amount: `$${amountValue}`, // Display amount in USD
+                    amount: amountValue, // Display amount in USD
                     color: amountValue > 0 ? "text-green-600" : "text-red-500", // Green for positive, Red for negative
                 };
             });

@@ -25,8 +25,9 @@ export async function GET() {
         const btcPriceData = await btcPriceRes.json();
         const btcPrice = btcPriceData.USD.last;
         const balance_usd = balance_btc * btcPrice;
+        console.log("Wallet balance in BTC:", balance_btc);
         console.log("Wallet balance in USD:", balance_usd);
-        return NextResponse.json({ balance: balance_usd.toFixed(3)});
+        return NextResponse.json({ balance: balance_usd.toFixed(3), btc_balance: balance_btc.toFixed(8) });
     } catch (error) {
         console.error("Wallet error:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
