@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-
+import { satsToUsd } from "@/utils/sats_to_usd";
 export async function GET() {
     try {
         const apiKey = process.env.LNBITS_API_KEY;
@@ -14,17 +14,15 @@ export async function GET() {
             },
         });
         const data = await response.json();
-        if (!response.ok){
+        if (!response.ok) {
             console.error("Wallet error:", data.detail);
             return NextResponse.json({ error: data.detail || "Failed to fetch wallet" }, { status: response.status });
         }
         const balance_msats = data.balance;
         const balance_sats = balance_msats / 1000;
+        const balance_usd = await satsToUsd(balance_sats);
         const balance_btc = balance_sats / 100_000_000;
-        const btcPriceRes = await fetch("https://blockchain.info/ticker");
-        const btcPriceData = await btcPriceRes.json();
-        const btcPrice = btcPriceData.USD.last;
-        const balance_usd = balance_btc * btcPrice;
+
         console.log("Wallet balance in BTC:", balance_btc);
         console.log("Wallet balance in USD:", balance_usd);
         return NextResponse.json({ balance: balance_usd.toFixed(3), btc_balance: balance_btc.toFixed(8) });

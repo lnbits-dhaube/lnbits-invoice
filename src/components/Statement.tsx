@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { TransactionResponse } from "@/interfaces/transactions";
+import { PaymentHistory } from "@/interfaces/payment_history";
+import { satsToUsd } from "@/utils/sats_to_usd";
 import Loading from "@/utils/loading";
 
 export default function Statement() {
@@ -14,6 +16,8 @@ export default function Statement() {
     const [searchQuery, setSearchQuery] = useState("");
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
+    const [history, setHistory] = useState<PaymentHistory | null>(null);
+    const [period, setPeriod] = useState("day");
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -22,9 +26,6 @@ export default function Statement() {
                 const res = await fetch(`/api/payment_list`);
                 const data = await res.json();
                 setTransactions(data);
-                setFilteredTransactions(data);
-                setActiveTransaction(data.slice(0, limit));
-                setNumPages(Math.ceil(data.length / limit));
             } catch (error) {
                 console.error("Error fetching transactions:", error);
             }
@@ -32,6 +33,30 @@ export default function Statement() {
         };
         fetchTransactions();
     }, []);
+
+    useEffect(() => {
+        const payment_history = async () => {
+            try {
+                const res = await fetch(`/api/payment_history?group=${period}`);
+                let data = await res.json();
+                if (Array.isArray(data)) {
+                    data = data[0];
+                }
+                if (!data) {
+                    setHistory(null);
+                    return;
+                }
+                data.income = parseFloat((await satsToUsd((data?.income ?? 0) / 1000)).toFixed(4));
+                data.spending = parseFloat((await satsToUsd((data?.spending ?? 0) / 1000)).toFixed(4));
+                setHistory(data);
+                console.log("Payment History:", data);
+            } catch (error) {
+                console.error("Error fetching payment history:", error);
+            }
+        }
+        payment_history();
+
+    }, [period]);
 
     useEffect(() => {
         const filtered = transactions.filter(tx => tx.memo.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -60,22 +85,25 @@ export default function Statement() {
         }
     }, [fromDate, toDate]);
 
+
     const filterByTime = (period: "day" | "week" | "month") => {
         const now = new Date();
         const startDate = new Date();
 
         if (period === "day") {
+            setPeriod("day");
             startDate.setDate(now.getDate() - 1);
         } else if (period === "week") {
+            setPeriod("week");
             startDate.setDate(now.getDate() - 7);
         } else if (period === "month") {
+            setPeriod("month");
             startDate.setMonth(now.getMonth() - 1);
         }
 
         setFromDate(startDate.toISOString().split("T")[0]);
         setToDate(now.toISOString().split("T")[0]);
     };
-
     return (
         <div className="bg-white p-4 rounded-lg shadow-lg">
             <h3 className="text-lg font-bold mb-2">Transactions Statement</h3>
@@ -90,13 +118,14 @@ export default function Statement() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                     <div className="flex gap-2 flex-wrap justify-center md:justify-start w-full">
-                        <button className="bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto"
+                        <button className={`bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto ${period === "day" ? "bg-green-300" : ""}`}
                             onClick={() => filterByTime("day")}>Day</button>
-                        <button className="bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto"
+                        <button className={`bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto ${period === "week" ? "bg-green-300" : ""}`}
                             onClick={() => filterByTime("week")}>Week</button>
-                        <button className="bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto"
+                        <button className={`bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto ${period === "month" ? "bg-green-300" : ""}`}
                             onClick={() => filterByTime("month")}>Month</button>
                     </div>
+
                 </div>
 
                 {/* Date Filter & Shortcuts */}
@@ -123,7 +152,19 @@ export default function Statement() {
                     </button>
                 </div>
             </div>
+            <hr />
+            <div className="flex flex-col sm:flex-row gap-4 p-4  w-full text-center sm:text-left">
+                <div className="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                    <span className="font-semibold text-gray-700">Total Income:</span>
+                    <span className="text-green-600 font-bold ml-2">${history?.income ?? 0}</span>
+                </div>
+                <div className="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                    <span className="font-semibold text-gray-700">Total Spending:</span>
+                    <span className="text-red-600 font-bold ml-2">${history?.spending ?? 0}</span>
+                </div>
+            </div>
 
+            <hr />
 
 
             {/* Transactions List */}
