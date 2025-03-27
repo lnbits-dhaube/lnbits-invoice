@@ -17,7 +17,7 @@ export default function Dashboard() {
 function DashboardContent() {
     const { activeComponent } = useDashboard();
     return (
-        <div className="flex min-h-screen h-full overflow-auto">
+        <div className="flex min-h-screen h-full overflow-hidden">
             {/* Sidebar */}
             <Sidebar />
 
