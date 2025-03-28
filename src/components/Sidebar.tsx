@@ -49,6 +49,7 @@ export default function Sidebar() {
                             <button className={`flex text-lg items-center w-full border-b border-black  text-black px-4 py-2 ${activeComponent === 'dashboard' ? "bg-yellow-200" : 'bg-white'}`}
                                 onClick={() => {
                                     // navigate to dashboard
+                                    toggleMenu();
                                     setActiveComponent("dashboard");
 
                                 }
@@ -65,6 +66,7 @@ export default function Sidebar() {
                             <button className={`flex text-lg items-center w-full border-b border-black  text-black px-4 py-2 ${activeComponent === 'statement' ? "bg-yellow-200" : 'bg-white'}`}
                                 onClick={() => {
                                     // navigate to statement
+                                    toggleMenu();
                                     setActiveComponent("statement");
                                 }
                                 }

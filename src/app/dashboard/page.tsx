@@ -27,10 +27,14 @@ function DashboardContent() {
                 <Header />
 
                 {/* <div className="h-10" /> */}
-                {/* Wallet Section */}
-                <div className="mt-6 ">
-                    <WalletCard />
-                </div>
+                {
+                    activeComponent === "dashboard" ? (
+                        <div className="mt-6">
+                            <WalletCard />
+                        </div>
+                    ) : null
+                }
+                
 
                 {/* Transactions */}
                 <div className="mt-6">

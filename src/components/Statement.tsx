@@ -8,6 +8,7 @@ import Loading from "@/utils/loading";
 export default function Statement() {
     const [transactions, setTransactions] = useState<TransactionResponse[]>([]);
     const [filteredTransactions, setFilteredTransactions] = useState<TransactionResponse[]>([]);
+    const [showFilters, setShowFilters] = useState(false);
     const [activeTransaction, setActiveTransaction] = useState<TransactionResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
@@ -107,8 +108,8 @@ export default function Statement() {
     return (
         <div className="bg-white p-4 rounded-lg shadow-lg">
             <h3 className="text-lg font-bold mb-2">Transactions Statement</h3>
-            <div className="space-y-4 md:flex md:flex-row md:flex-wrap justify-between">
-                <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-4">
+            <div className="space-y-2 md:flex md:flex-row md:flex-wrap justify-between">
+                <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 ">
                     {/* Search Bar */}
                     <input
                         type="text"
@@ -117,48 +118,71 @@ export default function Statement() {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    <div className="flex gap-2 flex-wrap justify-center md:justify-start w-full">
-                        <button className={`bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto ${period === "day" ? "bg-green-300" : ""}`}
+                    <div className="flex gap-2 flex-row justify-center md:justify-start w-full">
+                        <button className={`bg-gray-200 px-4 py-2 rounded-md md:w-auto ${period === "day" ? "bg-green-300" : ""}`}
                             onClick={() => filterByTime("day")}>Day</button>
-                        <button className={`bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto ${period === "week" ? "bg-green-300" : ""}`}
+                        <button className={`bg-gray-200 px-4 py-2 rounded-md md:w-auto ${period === "week" ? "bg-green-300" : ""}`}
                             onClick={() => filterByTime("week")}>Week</button>
-                        <button className={`bg-gray-200 px-4 py-2 rounded-md w-full md:w-auto ${period === "month" ? "bg-green-300" : ""}`}
+                        <button className={`bg-gray-200 px-4 py-2 rounded-md md:w-auto ${period === "month" ? "bg-green-300" : ""}`}
                             onClick={() => filterByTime("month")}>Month</button>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md w-full md:w-auto"
+                            onClick={() => setShowFilters(!showFilters)}
+                        >
+                            {showFilters ? "Hide Filter" : "Filter"}
+                        </button>
                     </div>
 
                 </div>
 
                 {/* Date Filter & Shortcuts */}
-                <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-4">
-                    <div className="flex flex-wrap gap-4 justify-center md:justify-start w-full md:w-auto">
-                        <input
-                            type="date"
-                            className="px-4 py-2 border rounded-md w-full md:w-auto"
-                            value={fromDate}
-                            onChange={(e) => setFromDate(e.target.value)}
-                        />
-                        <input
-                            type="date"
-                            className="px-4 py-2 border rounded-md w-full md:w-auto"
-                            value={toDate}
-                            onChange={(e) => setToDate(e.target.value)}
-                        />
-                    </div>
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md w-full md:w-auto mt-4 md:mt-0"
-                        onClick={applyDateFilter}
-                    >
-                        Filter
-                    </button>
+                <div className="flex items-center justify-center flex-row gap-4 md:gap-6">
+                    {showFilters && (
+                        <div className="fixed flex-col flex flex-wrap gap-2 items-center justify-center h-fit w-full inset-0 z-10 p-4">
+                            <div className="fixed inset-0 flex items-center justify-center z-10">
+                                <div className="flex flex-col gap-4 items-center justify-center p-6 bg-white border border-black rounded-lg shadow-lg">
+                                    <input
+                                        type="date"
+                                        className="px-4 py-2 border border-black rounded-md w-auto"
+                                        value={fromDate}
+                                        onChange={(e) => setFromDate(e.target.value)}
+                                    />
+                                    <input
+                                        type="date"
+                                        className="px-4 py-2 border border-black rounded-md w-auto"
+                                        value={toDate}
+                                        onChange={(e) => setToDate(e.target.value)}
+                                    />
+                                    <div className="flex gap-4">
+                                        <button
+                                            className="bg-green-500 text-white px-4 py-2 rounded-md"
+                                            onClick={() => {
+                                                applyDateFilter();
+                                                setShowFilters(false);
+                                            }}
+                                        >
+                                            Apply
+                                        </button>
+                                        <button
+                                            className="bg-red-500 text-white px-4 py-2 rounded-md"
+                                            onClick={() => setShowFilters(false)}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <hr />
-            <div className="flex flex-col sm:flex-row gap-4 p-4  w-full text-center sm:text-left">
-                <div className="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+            <div className="flex flex-row gap-2 p-2  w-full text-center sm:text-left text-sm">
+                <div className="flex p-2 items-center justify-center border border-gray-300 rounded-lg">
                     <span className="font-semibold text-gray-700">Total Income:</span>
                     <span className="text-green-600 font-bold ml-2">${history?.income ?? 0}</span>
                 </div>
-                <div className="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                <div className="flex p-2 items-center justify-center border border-gray-300 rounded-lg">
                     <span className="font-semibold text-gray-700">Total Spending:</span>
                     <span className="text-red-600 font-bold ml-2">${history?.spending ?? 0}</span>
                 </div>

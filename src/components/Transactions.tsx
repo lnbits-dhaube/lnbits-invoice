@@ -17,7 +17,7 @@ export default function Transactions() {
         const fetchTransactions = async () => {
             setLoading(true);
             try {
-                const res = await fetch(`/api/payment_list?limit=50`);
+                const res = await fetch(`/api/payment_list?limit=30`);
                 const data = await res.json();
                 setTransactions(data);
                 setFilteredTransactions(data);
