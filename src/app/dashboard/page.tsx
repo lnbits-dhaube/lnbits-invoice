@@ -7,40 +7,46 @@ import Statement from "@/components/Statement";
 import { DashboardProvider, useDashboard } from "@/context/DashboardContext";
 
 export default function Dashboard() {
-    return (
-        <DashboardProvider>
-            <DashboardContent />
-        </DashboardProvider>
-    );
+  return (
+    <DashboardProvider>
+      <DashboardContent />
+    </DashboardProvider>
+  );
 }
 
 function DashboardContent() {
-    const { activeComponent } = useDashboard();
-    return (
-        <div className="flex min-h-screen h-full overflow-hidden">
-            {/* Sidebar */}
-            <Sidebar />
+  const { activeComponent } = useDashboard();
+  return (
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className="hidden md:block md:sticky md:top-0 md:h-screen">
+        <Sidebar />
+      </div>
 
-            {/* Main Content */}
-            <div className="flex flex-col p-6 pt-2.5 bg-gray-100 w-full">
-                {/* Header */}
-                <Header />
+      {/* Mobile Sidebar */}
+      <div className="md:hidden">
+        <Sidebar />
+      </div>
 
-                {/* <div className="h-10" /> */}
-                {
-                    activeComponent === "dashboard" ? (
-                        <div className="mt-6">
-                            <WalletCard />
-                        </div>
-                    ) : null
-                }
-                
+      {/* Main Content */}
+      <main className="flex-1 bg-gray-100">
+        <div className="p-6 pt-2.5 min-h-screen">
+          {/* Header */}
+          <Header />
 
-                {/* Transactions */}
-                <div className="mt-6">
-                    {activeComponent === "dashboard" ? <Transactions /> : <Statement />}
-                </div>
+          {/* Wallet Card */}
+          {activeComponent === "dashboard" && (
+            <div className="mt-6">
+              <WalletCard />
             </div>
+          )}
+
+          {/* Transactions/Statement */}
+          <div className="mt-6">
+            {activeComponent === "dashboard" ? <Transactions /> : <Statement />}
+          </div>
         </div>
-    );
+      </main>
+    </div>
+  );
 }

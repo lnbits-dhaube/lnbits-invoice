@@ -18,6 +18,10 @@ import {
 import { z } from "zod";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
+import Spinner from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 const LoginSchema = z.object({
   phone: z.string().min(7, "Mobile number is too short"),
@@ -28,6 +32,10 @@ const LoginSchema = z.object({
 type LoginSchemaType = z.infer<typeof LoginSchema>;
 
 export default function LoginPage() {
+  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const methods = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -37,8 +45,16 @@ export default function LoginPage() {
     },
   });
 
-  const onSubmit = (data: LoginSchemaType) => {
-    console.log(data);
+  const onSubmit = async (data: LoginSchemaType) => {
+    try {
+      setIsLoading(true);
+      await login(data.phone, data.password);
+      router.push("/dashboard");
+    } catch (error) {
+      toast.error("Invalid credentials");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onError = (errors: FieldErrors<LoginSchemaType>) => {
@@ -71,6 +87,7 @@ export default function LoginPage() {
                   className="pl-10 h-14 text-lg md:text-lg"
                   placeholder="Mobile number"
                   {...methods.register("phone")}
+                  disabled={isLoading}
                 />
               </div>
               <div className="relative">
@@ -80,6 +97,7 @@ export default function LoginPage() {
                   className="pl-10 h-14 text-lg md:text-lg"
                   placeholder="Password"
                   {...methods.register("password")}
+                  disabled={isLoading}
                 />
               </div>
               <Controller
@@ -95,11 +113,11 @@ export default function LoginPage() {
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={(checked) => {
-                          console.log(checked);
                           field.onChange(checked);
                         }}
                         id="terms"
                         {...methods.register("remember")}
+                        disabled={isLoading}
                       />
                       <Label htmlFor="terms" className="text-sm text-gray-500">
                         Remember me
@@ -114,8 +132,16 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full flex-row bg-green-600 hover:bg-green-700 font-bold text-xl h-14"
                 size="lg"
+                disabled={isLoading}
               >
-                Login
+                {isLoading ? (
+                  <div className="flex items-center space-x-2">
+                    <Spinner className="h-10 w-10 text-white" />
+                    <span>Logging in...</span>
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </Button>
             </div>
           </CardContent>
