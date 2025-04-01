@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FaUser, FaStickyNote, FaDollarSign } from "react-icons/fa";
 
 import Loading from "@/components/ui/loading";
+import api from "@/api-services/api-services";
 
 export default function PaymentRequest() {
   const [name, setName] = useState<string>("");
@@ -34,17 +35,14 @@ export default function PaymentRequest() {
     setProcessing(true);
 
     try {
-      const response = await fetch("/api/payment-request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          memo: name,
-          amount: Number(amount),
-          unhashed_description: memo,
-        }),
+      const response = await api.post("/payment-request", {
+        memo: name,
+        amount: Number(amount),
+        unhashed_description: memo,
+        identificationId: process.env.NEXT_PUBLIC_IDENTIFICATION_ID,
       });
 
-      const data = await response.json();
+      const data = response.data;
       if (data.payment_request) {
         setInvoice(data.payment_request);
       } else {
